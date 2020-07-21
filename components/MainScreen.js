@@ -23,19 +23,26 @@ const MainScreen= () =>{
     const [factor,setFactor]= useState(1);
     const [identifier, setIdentifier]= useState(0);
     const [currency, setCurrency] = useState("USD");
+    const [INR,setINR]= useState();
+    const[USD,setUSD]= useState();
 
-    let INR;
-    let USD;
     useEffect( ()=> {
-        fetch("https://api.exchangeratesapi.io/latest")
-        .then((response)=> response.json())
-        .then((data)=> {
-            INR= data.rates.INR;
-            USD= data.rates.USD;
-            console.log(INR+" "+USD);
+            fetch("https://api.exchangeratesapi.io/latest")
+            .then((response)=> response.json())
+            .then((data)=> {
+                setINR(parseFloat(data.rates.INR));
+                setUSD(parseFloat(data.rates.USD));
         })
+    },[]);
+
+    useEffect( ()=> {
         
-    },[])
+            console.log(factor);
+            console.log(USD/INR);
+            console.log(aInp1+" "+aInp2+" "+aInp3+" "+bInp1+" "+bInp2+" "+bInp3+" "+factor+" "+identifier);
+        
+        
+    },[identifier]);
     
     const calc = ()=>{
         let aExpense= aInp1+aInp2+aInp3;
@@ -58,46 +65,34 @@ const MainScreen= () =>{
         
     }
 
-    const changeUSD= ()=>{
-        console.log(aInp1+" "+aInp2+" "+aInp3+" "+bInp1+" "+bInp2+" "+bInp3);
-        setFactor(USD/INR);
-        console.log(factor);
-        if(factor!==1){
-            
-            console.log(aInp1+" "+aInp2+" "+aInp3+" "+bInp1+" "+bInp2+" "+bInp3);
-            
-        }
-    }
-
     const changeCurrency= () =>{
-        console.log(aInp1+" "+aInp2+" "+aInp3+" "+bInp1+" "+bInp2+" "+bInp3+" "+factor+" "+identifier);
-        if((identifier%2) === 0){
-            let iden= identifier+1;
-            setIdentifier(iden);
+        
+        if((identifier%2) == 0){
+            setIdentifier(identifier+1);
             setCurrency("INR");
             setFactor(USD/INR);
             setAInp1(aInp1*factor);
             setAInp2(aInp2*factor);
-            setAInp2(aInp2*factor);
+            setAInp2(aInp3*factor);
             setBInp1(bInp1*factor);
             setBInp2(bInp2*factor);
             setBInp3(bInp3*factor);
             calc;
+            console.log("In if");
         }
         else{
-            let iden= identifier+1;
-            setIdentifier(iden);
+            setIdentifier(identifier+1);
             setCurrency("USD");
             setAInp1(aInp1/factor);
             setAInp2(aInp2/factor);
-            setAInp2(aInp2/factor);
+            setAInp2(aInp3/factor);
             setBInp1(bInp1/factor);
             setBInp2(bInp2/factor);
             setBInp3(bInp3/factor);
             setFactor(1);
             calc;
+            console.log("In else");
         }
-        console.log(aInp1+" "+aInp2+" "+aInp3+" "+bInp1+" "+bInp2+" "+bInp3+" "+factor+" "+identifier);
     }
 
     return(
@@ -122,12 +117,12 @@ const MainScreen= () =>{
 
             <View style={styles.expenses}>
                 <TextInput style={styles.expensesInp}
-                onChangeText={(text)=>setAInp1(parseInt(text))}
+                onChangeText={(text)=>setAInp1(parseFloat(text))}
                 value={aInp1}
                 keyboardType='numeric'
                 onSubmitEditing={calc}/>
                 <TextInput style={styles.expensesInp}
-                onChangeText={(text)=>setBInp1(parseInt(text))}
+                onChangeText={(text)=>setBInp1(parseFloat(text))}
                 value={bInp1}
                 keyboardType='numeric'
                 onSubmitEditing={calc}/>
@@ -135,12 +130,12 @@ const MainScreen= () =>{
 
             <View style={styles.expenses}>
                 <TextInput style={styles.expensesInp}
-                onChangeText={(text)=>setAInp2(parseInt(text))}
+                onChangeText={(text)=>setAInp2(parseFloat(text))}
                 value={aInp2}
                 keyboardType='numeric'
                 onSubmitEditing={calc}/>
                 <TextInput style={styles.expensesInp}
-                onChangeText={(text)=>setBInp2(parseInt(text))}
+                onChangeText={(text)=>setBInp2(parseFloat(text))}
                 value={bInp2}
                 keyboardType='numeric'
                 onSubmitEditing={calc}/>
@@ -148,12 +143,12 @@ const MainScreen= () =>{
 
             <View style={styles.expenses}>
                 <TextInput style={styles.expensesInp}
-                onChangeText={(text)=>setAInp3(parseInt(text))}
+                onChangeText={(text)=>setAInp3(parseFloat(text))}
                 value={aInp3}
                 keyboardType='numeric'
                 onSubmitEditing={calc}/>
                 <TextInput style={styles.expensesInp}
-                onChangeText={(text)=>setBInp3(parseInt(text))}
+                onChangeText={(text)=>setBInp3(parseFloat(text))}
                 value={bInp3}
                 keyboardType='numeric'
                 onSubmitEditing={calc}/>
@@ -161,7 +156,7 @@ const MainScreen= () =>{
             
             <View style={styles.btnContainer}>
                 <Button title={currency}
-                onPress={()=> changeCurrency()}
+                onPress={changeCurrency}
                 style={styles.btn}/>
             </View>
             
