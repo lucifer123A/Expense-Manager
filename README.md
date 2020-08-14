@@ -1,5 +1,5 @@
 # Expense-Manager
-Helps to determine who of the two user spend more
-Tried to add button to convert the data into USD and INR(default)
-It is not working properly just printing the data on console but not on the screen 
-Though the app works perfectly fine in one currency 
+Helps to determine who of the two users spend more
+Users can simply add at most 3 expenses as of now
+One spending more will have his name to be displayed at the bottom 
+with the amount he spended more than the other.
